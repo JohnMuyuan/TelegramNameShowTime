@@ -6,6 +6,8 @@
 JohnMuyno 14:11 🌦️ 25°C
 ```
 
+**详细介绍&教学文章：https://op.style/archives/26**
+
 ## 功能
 
 - 使用 Telegram API 修改当前账号的 `first_name`
