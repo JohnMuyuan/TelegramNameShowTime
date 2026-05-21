@@ -1,0 +1,19 @@
+{
+  "name": "telegram-name-show-time",
+  "version": "1.0.0",
+  "description": "Update Telegram display name with current time and weather.",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "check": "node --check src/index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "input": "^1.0.1",
+    "telegram": "^2.26.22"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
