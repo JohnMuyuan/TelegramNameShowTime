@@ -1,66 +1,62 @@
 # Telegram Name Show Time
 
-通过 Telegram 用户 API 定时修改自己的显示姓名，在名字后面显示时间、天气和温度，例如：
+Periodically update your Telegram display name through the user API, appending the time, weather, and temperature. Example:
 
 ```text
-JohnMuyno 14:11 🌦️ 25°C
+Example 14:11 🌦️ 25°C
 ```
 
-**详细介绍&教学文章：https://op.style/archives/26**
+## Features
 
-## 功能
+- Update the current account's `first_name` through the Telegram API.
+- Fetch current weather and temperature from the free Open-Meteo API.
+- Configure the base name, coordinates, time zone, and update interval.
+- Save the login session locally so subsequent starts do not require a new verification code.
 
-- 使用 Telegram API 修改当前账号的 `first_name`
-- 使用 Open-Meteo 免费接口获取实时天气和温度
-- 支持自定义基础姓名、经纬度、时区和更新间隔
-- 登录 Session 会保存到本地，后续启动不需要重复输入验证码
+## Obtain Telegram API credentials
 
-## 准备 Telegram API 信息
+1. Open <https://my.telegram.org/apps>.
+2. Sign in to your Telegram account.
+3. Create an application.
+4. Copy its `api_id` and `api_hash`.
 
-1. 打开 <https://my.telegram.org/apps>
-2. 登录你的 Telegram 账号
-3. 创建一个 App
-4. 复制 `api_id` 和 `api_hash`
-
-## 安装
+## Installation
 
 ```bash
 npm install
 ```
 
-## 配置
+## Configuration
 
-复制 `.env.example` 为 `.env`，然后修改里面的值：
+Copy `.env.example` to `.env` and edit the values:
 
 ```bash
 cp .env.example .env
 ```
 
-Windows PowerShell 可以用：
+On Windows PowerShell:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-主要配置：
+- `TELEGRAM_API_ID`: your Telegram `api_id`.
+- `TELEGRAM_API_HASH`: your Telegram `api_hash`.
+- `BASE_NAME`: your base display name, for example `Example`.
+- `LATITUDE` / `LONGITUDE`: weather coordinates. The sample uses the Royal Observatory in Greenwich, a public landmark.
+- `TIME_ZONE`: an IANA time zone, for example `UTC`. Set this to your preferred display time zone.
+- `UPDATE_INTERVAL_SECONDS`: update interval; at least `60` seconds is recommended.
 
-- `TELEGRAM_API_ID`: Telegram 的 `api_id`
-- `TELEGRAM_API_HASH`: Telegram 的 `api_hash`
-- `BASE_NAME`: 你的基础姓名，例如 `JohnMuyno`
-- `LATITUDE` / `LONGITUDE`: 天气位置经纬度
-- `TIME_ZONE`: 时区，例如 `Asia/Shanghai`
-- `UPDATE_INTERVAL_SECONDS`: 更新间隔，建议不要低于 `60`
-
-## 运行
+## Run
 
 ```bash
 npm start
 ```
 
-首次运行会要求输入手机号、验证码，若账号开启了两步验证，还会要求输入密码。登录成功后 Session 会保存到 `.telegram-session`。
+The first run asks for your phone number and verification code, and your password if two-step verification is enabled. The session is saved in `.telegram-session` after successful login.
 
-## 注意事项
+## Notes
 
-- Telegram 对频繁修改资料可能会限流，建议更新间隔保持 `60` 秒或更长。
-- 这个项目使用的是用户 API，不是 Bot API，所以需要你的 Telegram `api_id` / `api_hash`。
-- 如果要重新登录，停止程序后删除 `.telegram-session` 再运行。
+- Telegram may rate-limit frequent profile changes; use an interval of `60` seconds or longer.
+- This project uses the user API rather than the Bot API, so it needs your Telegram `api_id` and `api_hash`.
+- To sign in again, stop the application, remove `.telegram-session`, and restart it.
