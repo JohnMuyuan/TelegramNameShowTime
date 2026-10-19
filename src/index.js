@@ -54,14 +54,14 @@ const client = new TelegramClient(
 );
 
 await client.start({
-  phoneNumber: () => input.text('请输入 Telegram 手机号（含国家区号，例如 +8613...）：'),
-  password: () => input.password('请输入两步验证密码：'),
-  phoneCode: () => input.text('请输入 Telegram 验证码：'),
-  onError: (error) => console.error('Telegram 登录错误：', error.message)
+  phoneNumber: () => input.text('Enter your Telegram phone number with country code: '),
+  password: () => input.password('Enter your two-step verification password: '),
+  phoneCode: () => input.text('Enter your Telegram verification code: '),
+  onError: (error) => console.error('Telegram login error: ', error.message)
 });
 
 writeSession(sessionPath, client.session.save());
-console.log('Telegram 登录成功，开始更新姓名。按 Ctrl+C 停止。');
+console.log('Telegram login successful. Updating display name. Press Ctrl+C to stop.');
 
 await updateName();
 setInterval(updateName, config.updateIntervalSeconds * 1000);
@@ -84,9 +84,9 @@ async function updateName() {
     );
 
     lastName = nextName;
-    console.log(`[${new Date().toISOString()}] 已更新姓名：${nextName}`);
+    console.log(`[${new Date().toISOString()}] Display name updated: ${nextName}`);
   } catch (error) {
-    console.error(`[${new Date().toISOString()}] 更新失败：${error.message}`);
+    console.error(`[${new Date().toISOString()}] Update failed: ${error.message}`);
   }
 }
 
@@ -99,13 +99,13 @@ async function getWeather(latitude, longitude, timeZone) {
 
   const response = await fetch(url);
   if (!response.ok) {
-    throw new Error(`天气接口返回 ${response.status}`);
+    throw new Error(`Weather API returned ${response.status}`);
   }
 
   const data = await response.json();
   const current = data.current;
   if (!current || typeof current.temperature_2m !== 'number') {
-    throw new Error('天气接口返回数据异常');
+    throw new Error('Invalid weather API response');
   }
 
   const code = Number(current.weather_code);
@@ -132,21 +132,21 @@ function readConfig() {
   const required = ['TELEGRAM_API_ID', 'TELEGRAM_API_HASH'];
   const missing = required.filter((key) => !process.env[key]);
   if (missing.length > 0) {
-    throw new Error(`缺少环境变量：${missing.join(', ')}。请先复制 .env.example 为 .env 并填写。`);
+    throw new Error(`Missing environment variables: ${missing.join(', ')}. Copy .env.example to .env and fill in the values first.`);
   }
 
   const apiId = Number(process.env.TELEGRAM_API_ID);
   if (!Number.isInteger(apiId)) {
-    throw new Error('TELEGRAM_API_ID 必须是数字');
+    throw new Error('TELEGRAM_API_ID must be a number');
   }
 
   return {
     apiId,
     apiHash: process.env.TELEGRAM_API_HASH,
-    baseName: process.env.BASE_NAME || 'JohnMuyno',
-    latitude: readNumber('LATITUDE', 31.2304),
-    longitude: readNumber('LONGITUDE', 121.4737),
-    timeZone: process.env.TIME_ZONE || 'Asia/Shanghai',
+    baseName: process.env.BASE_NAME || 'Example',
+    latitude: readNumber('LATITUDE', 51.4779),
+    longitude: readNumber('LONGITUDE', 0),
+    timeZone: process.env.TIME_ZONE || 'UTC',
     updateIntervalSeconds: Math.max(readNumber('UPDATE_INTERVAL_SECONDS', 60), 30),
     sessionFile: process.env.SESSION_FILE || '.telegram-session'
   };
@@ -160,7 +160,7 @@ function readNumber(key, defaultValue) {
 
   const number = Number(value);
   if (!Number.isFinite(number)) {
-    throw new Error(`${key} 必须是数字`);
+    throw new Error(`${key} must be a number`);
   }
 
   return number;
